@@ -29,4 +29,17 @@ if (isset($_GET['offset'])) {
 }
 
 $vikings = findAllVikings($name, $limit, $offset);
-echo json_encode($vikings);
+
+
+foreach ($vikings as $viking) {
+    $result[] = [
+        "id" => $viking['id'],
+        "name" => $viking['name'],
+        "attack" => $viking['attack'],
+        "defense" => $viking['defense'],
+        "health" => $viking['health'],
+        "weapon" => $viking['weapon'] ? "/weapon/findOne.php?id=" . $viking['weapon'] : ""
+    ];
+}
+
+echo json_encode($result, JSON_UNESCAPED_SLASHES);

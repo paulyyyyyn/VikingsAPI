@@ -3,11 +3,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/api/utils/database.php';
 
 function findOneViking(string $id) {
     $db = getDatabaseConnection();
-    $sql = "SELECT id, name, health, attack, defense FROM viking WHERE id = :id";
+    $sql = "SELECT id, name, health, attack, defense, weapon FROM viking WHERE id = :id";
     $stmt = $db->prepare($sql);
     $res = $stmt->execute(['id' => $id]);
     if ($res) {
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $viking = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        return $viking;
     }
     return null;
 }
@@ -15,11 +17,12 @@ function findOneViking(string $id) {
 function findAllVikings (string $name = "", int $limit = 10, int $offset = 0) {
     $db = getDatabaseConnection();
     $params = [];
-    $sql = "SELECT id, name, health, attack, defense FROM viking";
+    $sql = "SELECT id, name, health, attack, defense, weapon FROM viking";
     if ($name) {
         $sql .= " WHERE name LIKE %:name%";
         $params['name'] = $name;
     }
+
     $sql .= " LIMIT $limit OFFSET $offset ";
     $stmt = $db->prepare($sql);
     $res = $stmt->execute($params);
@@ -31,7 +34,7 @@ function findAllVikings (string $name = "", int $limit = 10, int $offset = 0) {
 
 function createViking(string $name, int $health, int $attack, int $defense) {
     $db = getDatabaseConnection();
-    $sql = "INSERT INTO viking (name, health, attack, defense) VALUES (:name, :health, :attack, :defense)";
+    $sql = "INSERT INTO viking (name, health, attack, defense, weapon) VALUES (:name, :health, :attack, :defense, 1)";
     $stmt = $db->prepare($sql);
     $res = $stmt->execute(['name' => $name, 'health' => $health, 'attack' => $attack, 'defense' => $defense]);
     if ($res) {

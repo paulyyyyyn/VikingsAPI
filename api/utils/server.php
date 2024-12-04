@@ -4,6 +4,7 @@ function methodIsAllowed(string $action): bool {
     $method = $_SERVER['REQUEST_METHOD'];
     switch ($action) {
         case 'update':
+            return $method == 'PATCH';
         case 'create':
             return $method == 'PUT';
         case 'read':
